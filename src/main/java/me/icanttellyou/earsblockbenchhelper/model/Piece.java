@@ -25,7 +25,6 @@ public class Piece {
     public float inflate;
     public Vector3f rotation;
     public Vector3f origin;
-    public Vector2f uvOffset;
     public Map<String, Face> faces = new HashMap<>();
     public String type = "cube";
     public UUID uuid = UUID.randomUUID();

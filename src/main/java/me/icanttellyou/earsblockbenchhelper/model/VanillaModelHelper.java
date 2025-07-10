@@ -98,7 +98,6 @@ public class VanillaModelHelper {
         p.faces.put("up", up);
         p.faces.put("down", down);
 
-        p.uvOffset = new Vector2f(u, v);
         p.inflate = inflate;
 
         return p;

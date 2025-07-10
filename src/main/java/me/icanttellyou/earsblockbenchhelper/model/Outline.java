@@ -35,7 +35,7 @@ public class Outline {
 
             for (Piece p : children) {
                 arr.add(p.uuid.toString());
-            };
+            }
             return arr;
         }
     }

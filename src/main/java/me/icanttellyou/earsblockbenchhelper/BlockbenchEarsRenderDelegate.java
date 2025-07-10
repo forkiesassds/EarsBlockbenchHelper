@@ -153,7 +153,6 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         Face dummy = new Face();
         dummy.uv = new float[]{0, 0, 0, 0};
 
-        p.uvOffset = new Vector2f(u, v);
         p.faces.put("north", f);
         p.faces.put("south", f);
         p.faces.put("west", dummy);
