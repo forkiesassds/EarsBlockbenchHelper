@@ -35,8 +35,8 @@ public class VanillaModelHelper {
         torso.origin = torsoOverlay.origin = new Vector3f(0.0F, 0.0F, 0.0F);
         rightArm.origin = rightArmOverlay.origin = new Vector3f(-5.0F, 2.0F, 0.0F);
         leftArm.origin = leftArmOverlay.origin = new Vector3f(5.0F, 2.0F, 0.0F);
-        rightLeg.origin = rightLegOverlay.origin = new Vector3f(-1.9F, 12.0F, 0.0F);
-        leftLeg.origin = leftLegOverlay.origin = new Vector3f(1.9F, 12.0F, 0.0F);
+        rightLeg.origin = rightLegOverlay.origin = new Vector3f(-2.0F, 12.0F, 0.0F);
+        leftLeg.origin = leftLegOverlay.origin = new Vector3f(2.0F, 12.0F, 0.0F);
 
         Outline headO = new Outline("head", head, headOverlay);
         Outline torsoO = new Outline("torso", torso, torsoOverlay);
@@ -88,7 +88,7 @@ public class VanillaModelHelper {
 
         Vector3f rotation = new Vector3f(rotX, rotY, rotZ);
 
-        Piece p = new Piece(name, from, to, rotation, new Vector3f(from));
+        Piece p = new Piece(name, from, to, rotation, new Vector3f());
 
         p.faces.put("north", north);
         p.faces.put("south", south);

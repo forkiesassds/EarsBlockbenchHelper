@@ -26,12 +26,18 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         this.enableLayers = enableLayers;
         this.model = model;
 
+        this.modelMatrix.set(new Matrix4f(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, -1, 0,
+                0, 0, 0, 0
+        ));
         this.model.outliner.add(earsOutline);
     }
 
     @Override
     public void translate(float x, float y, float z) {
-        modelMatrix.translate(x, -y, z);
+        modelMatrix.translate(x, y, z);
     }
 
     @Override
@@ -57,14 +63,17 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         if (target == null)
             return;
 
-        translate(target.origin.x, target.origin.y, target.origin.z);
+        float scale = 1 / 16F;
+        translate(target.origin.x * scale, target.origin.y * scale, target.origin.z * scale);
 
         rotate(-target.rotation.z, 0.0F, 0.0F, 1.0F);
         rotate(-target.rotation.y, 0.0F, 1.0F, 0.0F);
         rotate(-target.rotation.x, 1.0F, 0.0F, 0.0F);
 
-        Vector3f dimensions = target.getDimensions();
-        translate(-(dimensions.x / 2), -(dimensions.y / 2), -(dimensions.z / 2));
+//        Vector3f dimensions = target.getDimensions();
+//        translate(-(dimensions.x / 2), -(dimensions.y / 2), -(dimensions.z / 2));
+//        scale(1 / 16F, 1 / 16F, 1 / 16F);
+        translate(-target.from.x, target.to.y, -target.from.z);
     }
 
     @Override
@@ -136,7 +145,7 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         }
         f.uv = new float[]{minU, minV, maxU, maxV};
 
-        Vector3f origin = new Vector3f();
+        Vector3f origin = new Vector3f(width, height, 0);
         origin.add((float) width / 2, (float) -height / 2, 0);
 
         Matrix4f scale = new Matrix4f(
@@ -146,14 +155,10 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
                 0, 0, 0, 0
         );
 
-        Matrix4f modelM = scale.mul(modelMatrix, new Matrix4f());
-
         Vector3f from = new Vector3f((float) -width / 2, (float) -height / 2, 0);
         Vector3f to = new Vector3f((float) width / 2, (float) height / 2, 0);
 
-        modelM.transformPosition(origin);
-        modelM.transformPosition(from);
-        modelM.transformPosition(to);
+        modelMatrix.transformPosition(origin);
 
         from.add(origin);
         to.add(origin);
