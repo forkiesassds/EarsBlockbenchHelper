@@ -32,10 +32,6 @@ public class TextureManager {
                 BufferedImage bufferedImage = ImageIO.read(stream);
                 Texture texture = new Texture(bufferedImage);
 
-                if (texSource == EarsRenderDelegate.TexSource.EMISSIVE_SKIN ||
-                        texSource == EarsRenderDelegate.TexSource.EMISSIVE_WING)
-                    texture.renderMode = "emissive";
-
                 textures.put(textureCount, texture);
                 sourceToTexMap.put(texSource, textureCount);
                 boundTexture = textureCount;
