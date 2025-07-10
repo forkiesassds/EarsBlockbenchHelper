@@ -12,16 +12,9 @@ public class Piece {
     public String name;
     @SerializedName("box_uv")
     public boolean boxUV;
-    public boolean rescale;
-    public boolean locked;
-    public int lightEmission;
     @SerializedName("render_order")
-    public String renderOrder;
-    public boolean allowMirrorModeling;
+    public String renderOrder = "default";
     public Vector3f from, to;
-    @SerializedName("autouv")
-    public int autoUV;
-    public int color;
     public float inflate;
     public Vector3f rotation;
     public Vector3f origin;
