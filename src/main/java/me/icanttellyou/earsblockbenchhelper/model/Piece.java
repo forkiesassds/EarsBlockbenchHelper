@@ -1,7 +1,6 @@
 package me.icanttellyou.earsblockbenchhelper.model;
 
 import com.google.gson.annotations.SerializedName;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.HashMap;

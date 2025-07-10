@@ -36,7 +36,7 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
 
     @Override
     public void rotate(float angle, float x, float y, float z) {
-        rotationMatrix.rotate((float) Math.toRadians(angle), x, y, z);
+        rotationMatrix.rotate((float) Math.toRadians(-angle), x, y, z);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
 
         Matrix4f scale = new Matrix4f(
                 1, 0, 0, 0,
-                0, 1, 0, 1,
+                0, 1, 0, 0,
                 0, 0, -1, 0,
                 0, 0, 0, 0
         );
@@ -165,8 +165,8 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         Face dummy = new Face();
         dummy.uv = new float[]{0, 0, 0, 0};
 
-        p.faces.put("north", f);
-        p.faces.put("south", f);
+        p.faces.put("north", back ? dummy : f);
+        p.faces.put("south", back ? f : dummy);
         p.faces.put("west", dummy);
         p.faces.put("east", dummy);
         p.faces.put("up", dummy);
