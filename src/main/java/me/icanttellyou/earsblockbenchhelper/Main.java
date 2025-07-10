@@ -33,7 +33,7 @@ public class Main {
         }
 
         Model model = VanillaModelHelper.makeModel(true);
-        EarsCommon.render(features, new BlockbenchEarsRenderDelegate(features, model, true, true));
+        EarsCommon.render(features, new BlockbenchEarsRenderDelegate(features, model, false, true));
 
         System.out.println(getGSON().toJson(model));
     }

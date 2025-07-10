@@ -1,6 +1,5 @@
 package me.icanttellyou.earsblockbenchhelper.model;
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class VanillaModelHelper {

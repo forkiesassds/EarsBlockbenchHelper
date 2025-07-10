@@ -11,6 +11,7 @@ import org.joml.*;
 import java.lang.Math;
 
 public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDelegate {
+    public Matrix3fStack rotationMatrix = new Matrix3fStack(64);
     public Matrix4fStack modelMatrix = new Matrix4fStack(64);
     public EarsFeatures features;
     public boolean enableSlim, enableLayers;
@@ -35,7 +36,7 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
 
     @Override
     public void rotate(float angle, float x, float y, float z) {
-        modelMatrix.rotate((float) Math.toRadians(angle), x, y, z);
+        rotationMatrix.rotate((float) Math.toRadians(angle), x, y, z);
     }
 
     @Override
@@ -56,24 +57,26 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         if (target == null)
             return;
 
-        modelMatrix.translate(target.origin);
+        translate(target.origin.x, target.origin.y, target.origin.z);
 
-        modelMatrix.rotate((float) Math.toRadians(-target.rotation.z), 0.0F, 0.0F, 1.0F);
-        modelMatrix.rotate((float) Math.toRadians(-target.rotation.y), 0.0F, 1.0F, 0.0F);
-        modelMatrix.rotate((float) Math.toRadians(-target.rotation.x), 1.0F, 0.0F, 0.0F);
+        rotate(-target.rotation.z, 0.0F, 0.0F, 1.0F);
+        rotate(-target.rotation.y, 0.0F, 1.0F, 0.0F);
+        rotate(-target.rotation.x, 1.0F, 0.0F, 0.0F);
 
         Vector3f dimensions = target.getDimensions();
-        modelMatrix.translate(-(dimensions.x / 2), -(dimensions.y / 2), -(dimensions.z / 2));
+        translate(-(dimensions.x / 2), -(dimensions.y / 2), -(dimensions.z / 2));
     }
 
     @Override
     public void push() {
         modelMatrix.pushMatrix();
+        rotationMatrix.pushMatrix();
     }
 
     @Override
     public void pop() {
         modelMatrix.popMatrix();
+        rotationMatrix.popMatrix();
     }
 
     @Override
@@ -142,14 +145,23 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
                 0, 0, -1, 0,
                 0, 0, 0, 0
         );
-        scale.mul(modelMatrix);
-        Quaternionf quart = scale.getNormalizedRotation(new Quaternionf());
-        scale.rotation(quart.invert(new Quaternionf()));
-        scale.transformPosition(origin);
 
-        Vector3f from = new Vector3f(origin.x - (float) width / 2, origin.y - (float) height / 2, origin.z);
-        Vector3f to = new Vector3f(origin.x + (float) width / 2, origin.y + (float) height / 2, origin.z);
-        Piece p = new Piece("ears" + earsPieces++, from, to, new Vector3f(0, 0, 0), origin);
+        Matrix4f modelM = scale.mul(modelMatrix, new Matrix4f());
+
+        Vector3f from = new Vector3f((float) -width / 2, (float) -height / 2, 0);
+        Vector3f to = new Vector3f((float) width / 2, (float) height / 2, 0);
+
+        modelM.transformPosition(origin);
+        modelM.transformPosition(from);
+        modelM.transformPosition(to);
+
+        from.add(origin);
+        to.add(origin);
+
+        Vector3f rotation = rotationMatrix.getEulerAnglesZYX(new Vector3f());
+        rotation.div((2.0F * (float) Math.PI) / 360.0F);
+
+        Piece p = new Piece("ears" + earsPieces++, from, to, rotation, origin);
         Face dummy = new Face();
         dummy.uv = new float[]{0, 0, 0, 0};
 
@@ -160,11 +172,6 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         p.faces.put("up", dummy);
         p.faces.put("down", dummy);
         p.inflate = grow.grow;
-
-        p.rotation = quart.transform(new Vector3f(1, 1, 1));
-//        p.rotation = quart.getEulerAnglesXYZ(new Vector3f());
-        p.rotation.div((2.0F * (float) Math.PI) / 360.0F);
-        System.out.println(p.rotation);
 
         model.elements.add(p);
         earsOutline.children.add(p);
