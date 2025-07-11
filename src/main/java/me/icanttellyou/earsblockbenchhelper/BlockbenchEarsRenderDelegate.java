@@ -17,7 +17,7 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
     public boolean enableSlim, enableLayers;
     public Model model;
 
-    private Outline earsOutline = new Outline("ears");
+    private final Outline earsOutline = new Outline("ears");
     private int earsPieces = 0;
 
     public BlockbenchEarsRenderDelegate(EarsFeatures features, Model model, boolean enableSlim, boolean enableLayers) {
@@ -37,7 +37,7 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
 
     @Override
     public void translate(float x, float y, float z) {
-        modelMatrix.translate(x, y, z);
+        modelMatrix.translate(-x, y, -z);
     }
 
     @Override
@@ -63,17 +63,14 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         if (target == null)
             return;
 
-        float scale = 1 / 16F;
+        float scale = 1;
         translate(target.origin.x * scale, target.origin.y * scale, target.origin.z * scale);
 
         rotate(-target.rotation.z, 0.0F, 0.0F, 1.0F);
         rotate(-target.rotation.y, 0.0F, 1.0F, 0.0F);
         rotate(-target.rotation.x, 1.0F, 0.0F, 0.0F);
 
-//        Vector3f dimensions = target.getDimensions();
-//        translate(-(dimensions.x / 2), -(dimensions.y / 2), -(dimensions.z / 2));
-//        scale(1 / 16F, 1 / 16F, 1 / 16F);
-        translate(-target.from.x, target.to.y, -target.from.z);
+        translate(target.from.x, target.to.y, target.from.z);
     }
 
     @Override
@@ -107,7 +104,6 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         if (grow.grow > 0) {
             push();
             translate(-grow.grow, -grow.grow, 0);
-            pop();
         }
 
         if (back)
@@ -145,23 +141,13 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         }
         f.uv = new float[]{minU, minV, maxU, maxV};
 
-        Vector3f origin = new Vector3f(width, height, 0);
-        origin.add((float) width / 2, (float) -height / 2, 0);
+        Vector3f from = new Vector3f();
+        Vector3f to = new Vector3f(width, height, 0);
 
-        Matrix4f scale = new Matrix4f(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, -1, 0,
-                0, 0, 0, 0
-        );
+        modelMatrix.transformPosition(from);
+        modelMatrix.transformPosition(to);
 
-        Vector3f from = new Vector3f((float) -width / 2, (float) -height / 2, 0);
-        Vector3f to = new Vector3f((float) width / 2, (float) height / 2, 0);
-
-        modelMatrix.transformPosition(origin);
-
-        from.add(origin);
-        to.add(origin);
+        Vector3f origin = new Vector3f((to.x - from.x) / 2, to.y, (to.z - from.z) / 2);
 
         Vector3f rotation = rotationMatrix.getEulerAnglesZYX(new Vector3f());
         rotation.div((2.0F * (float) Math.PI) / 360.0F);
@@ -177,6 +163,10 @@ public class BlockbenchEarsRenderDelegate extends AbstractDetachedEarsRenderDele
         p.faces.put("up", dummy);
         p.faces.put("down", dummy);
         p.inflate = grow.grow;
+
+        if (grow.grow > 0) {
+            pop();
+        }
 
         model.elements.add(p);
         earsOutline.children.add(p);
