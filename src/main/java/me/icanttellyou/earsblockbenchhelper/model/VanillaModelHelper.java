@@ -31,12 +31,12 @@ public class VanillaModelHelper {
         Piece leftLeg = bodyPart("left_leg", -4, 0, -2, 4, 12, 4, 16, 48, false, 0, 0, 0);
         Piece leftLegOverlay = bodyPart("left_leg2", -4, 0, -2, 4, 12, 4, 0, 48, true, 0, 0, 0);
 
-        head.origin = headOverlay.origin = new Vector3f(0.0F, 0.0F, 0.0F);
+        head.origin = headOverlay.origin = new Vector3f(0.0F, 28.0F, 0.0F);
         torso.origin = torsoOverlay.origin = new Vector3f(0.0F, 0.0F, 0.0F);
-        rightArm.origin = rightArmOverlay.origin = new Vector3f(-5.0F, 2.0F, 0.0F);
-        leftArm.origin = leftArmOverlay.origin = new Vector3f(5.0F, 2.0F, 0.0F);
-        rightLeg.origin = rightLegOverlay.origin = new Vector3f(-2.0F, 12.0F, 0.0F);
-        leftLeg.origin = leftLegOverlay.origin = new Vector3f(2.0F, 12.0F, 0.0F);
+        rightArm.origin = rightArmOverlay.origin = new Vector3f(-5.5F, 18.0F, 0.0F);
+        leftArm.origin = leftArmOverlay.origin = new Vector3f(5.5F, 18.0F, 0.0F);
+        rightLeg.origin = rightLegOverlay.origin = new Vector3f(-2.0F, 6.0F, 0.0F);
+        leftLeg.origin = leftLegOverlay.origin = new Vector3f(2.0F, 6.0F, 0.0F);
 
         Outline headO = new Outline("head", head, headOverlay);
         Outline torsoO = new Outline("torso", torso, torsoOverlay);
